@@ -10,6 +10,12 @@ export const typeDefs = gql`
     url: String!
   }
 
+  type FileData {
+    name: String!
+    size: Float!
+    lastModified: String!
+  }
+
   type Bucket {
     name: String!
     creationDate: String!
@@ -17,6 +23,10 @@ export const typeDefs = gql`
 
   type Query {
     listBucket: [Bucket!]!
+
+    listObjectInBucket(
+      bucket: String!
+    ): [FileData!]
   }
 
   type Mutation {

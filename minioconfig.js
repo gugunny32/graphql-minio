@@ -81,6 +81,31 @@ export async function listAllBucket() {
     }
 }
 
+export async function listObject(bucketName) {
+    try {
+        const result = new Promise((resolve, reject) => {
+            const data = []
+            const stream = minioClient.listObjects(bucketName, '', true)
+            stream.on('data', function (obj) {
+                data.push(obj)
+            })
+            stream.on('end', function (obj) {
+                console.log(data)
+                resolve(data.map(filedata => {
+                    return { name: filedata.name, size: filedata.size, lastModified: new Date(filedata.lastModified).toISOString().slice(0, 19).replace('T', ' ') }
+                }))
+            })
+            stream.on('error', function (err) {
+                console.log(err)
+                reject(err)
+            })
+        })
+        return await result
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export async function removeBucket(bucketName) {
     try {
         await minioClient.removeBucket(bucketName)
