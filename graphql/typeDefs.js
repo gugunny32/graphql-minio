@@ -47,5 +47,15 @@ export const typeDefs = gql`
     removeBucket(
         name: String!
     ): Boolean!
+
+    removeObject(
+        bucket: String!
+        fileName: String!
+    ): Boolean!
+
+    removeIncompleteUpload(
+        bucket: String!
+        fileName: String!
+    ): Boolean!
   }
 `;

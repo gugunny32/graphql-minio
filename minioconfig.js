@@ -69,6 +69,16 @@ export async function createBucketForMinIO(bucketName) {
     }
 }
 
+export async function removeObject(bucketName, fileName) {
+    try {
+        await minioClient.removeObject(bucketName, fileName)
+        return true
+    } catch (error) {
+        console.log(error);
+        return false
+    }
+}
+
 export async function listAllBucket() {
     try {
         const buckets = await minioClient.listBuckets()
@@ -89,7 +99,7 @@ export async function listObject(bucketName) {
             stream.on('data', function (obj) {
                 data.push(obj)
             })
-            stream.on('end', function (obj) {
+            stream.on('end', function () {
                 console.log(data)
                 resolve(data.map(filedata => {
                     return { name: filedata.name, size: filedata.size, lastModified: new Date(filedata.lastModified).toISOString().slice(0, 19).replace('T', ' ') }
@@ -116,6 +126,15 @@ export async function removeBucket(bucketName) {
     }
 }
 
+export async function removeIncompleteUpload(bucketName, fileName) {
+    try {
+        await minioClient.removeIncompleteUpload(bucketName, fileName)
+        return true
+    } catch (error) {
+        console.log(error);
+        return false
+    }
+}
 // export async function percentUploaded(bucketName) {
 //     try {
 //         const Stream = minioClient.listIncompleteUploads(bucketName, '', true)

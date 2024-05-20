@@ -1,5 +1,5 @@
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
-import { uploadFileToMinIO, createBucketForMinIO, listAllBucket, removeBucket, downloadFileFromMinio, listObject } from '../minioconfig.js';
+import { uploadFileToMinIO, createBucketForMinIO, listAllBucket, removeBucket, downloadFileFromMinio, listObject, removeObject } from '../minioconfig.js';
 
 export const resolvers = {
     Upload: GraphQLUpload,
@@ -43,5 +43,12 @@ export const resolvers = {
           const isExists = await removeBucket(name)
           return isExists
         },
+
+        removeObject: async (_, args) => {
+            const { bucket, fileName } = args
+            const result = await removeObject(bucket, fileName)
+            console.log(result);
+            return result
+        }
     },
 };
