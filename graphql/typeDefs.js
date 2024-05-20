@@ -53,6 +53,12 @@ export const typeDefs = gql`
         fileName: String!
     ): Boolean!
 
+    renameObject(
+        bucket: String!
+        fileName: String!
+        newFileName: String!
+    ): String!
+
     removeIncompleteUpload(
         bucket: String!
         fileName: String!
