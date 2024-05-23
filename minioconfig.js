@@ -101,11 +101,16 @@ export async function renameObject(bucketName, fileName, newFileName) {
                 await minioClient.removeObject(bucketName, fileName)
                 const stream = fs.createReadStream(filePath)
                 await minioClient.putObject(bucketName, newFileName, stream)
+                fs.unlink(filePath, (err) => {
+                    if (err) throw err;
+                    else console.log('file deleted!');;
+                });
                 resolve(`http://localhost:8015/${bucketName}/${newFileName}`)
                 });
             }).on('error', (err) => {
                 fs.unlink(filePath, (err) => {
                     if (err) throw err;
+                    else console.log('file deleted!');;
                 });
                 console.error('Error:', err.message);
                 reject(err.message)
