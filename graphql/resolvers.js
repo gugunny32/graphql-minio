@@ -1,5 +1,5 @@
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
-import { uploadFileToMinIO, createBucketForMinIO, listAllBucket, removeBucket, downloadFileFromMinio, listObject, removeObject, renameObject, removeIncompleteUpload } from '../minioconfig.js';
+import { uploadFileToMinIO, createBucketForMinIO, listAllBucket, removeBucket, downloadFileFromMinio, listObject, removeObject, renameObject, removeIncompleteUpload, incompleteUpload } from '../minioconfig.js';
 
 export const resolvers = {
     Upload: GraphQLUpload,
@@ -10,10 +10,16 @@ export const resolvers = {
             return buckets
         },
 
-        listObjectInBucket: async (_, args) => {
+        listObject: async (_, args) => {
             const { bucket } = args
             const data = await listObject(bucket)
             return data
+        },
+
+        listIncompleteUpload: async (_, args) => {
+            const { bucket } = args
+            const result = await incompleteUpload(bucket)
+            return result
         }
     },
     Mutation: {

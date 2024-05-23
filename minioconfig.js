@@ -171,12 +171,43 @@ export async function removeBucket(bucketName) {
 
 export async function removeIncompleteUpload(bucketName, fileName) {
     try {
-        await minioClient.removeIncompleteUpload(bucketName, fileName)
-        return true
+        return new Promise((resolve, reject) => {
+            minioClient.removeIncompleteUpload(bucketName, fileName, function(err) {
+                if (err) {
+                    console.log('Unable to remove incomplete object', err)
+                    resolve(false)
+                    reject('Unable to remove incomplete object', err)
+                } else {
+                    console.log('incomplete upload object removed')
+                    resolve(true)
+                }
+            })
+        })
     } catch (error) {
         console.log(error);
-        return false
+        throw error
     }
+}
+
+export async function incompleteUpload(bucketName) {
+    return new Promise((resolve, reject) => {
+        const Stream = minioClient.listIncompleteUploads(bucketName, '', true)
+        let datas = []
+        Stream.on('data', function (obj) {
+            console.log(obj.key);
+            datas.push(obj)
+        })
+        Stream.on('end', function () {
+            console.log(datas)
+            resolve(datas.map(data => {
+                return data.key
+            }))
+        })
+        Stream.on('error', function (err) {
+            console.log(err)
+            reject(err)
+        })
+    })
 }
 // export async function percentUploaded(bucketName) {
 //     try {

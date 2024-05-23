@@ -24,9 +24,13 @@ export const typeDefs = gql`
   type Query {
     listBucket: [Bucket!]!
 
-    listObjectInBucket(
+    listObject(
       bucket: String!
     ): [FileData!]
+
+    listIncompleteUpload(
+        bucket: String!
+    ): [String!]
   }
 
   type Mutation {
